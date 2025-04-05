@@ -7,6 +7,7 @@ import {
 	Lock,
 	Settings as SettingsIcon
 } from 'lucide-react';
+import './WalletPage.css'
 import Card from '../components/Card';
 
 function WalletPage() {
@@ -81,4 +82,15 @@ function WalletPage() {
 	);
 }
 
-export default WalletPage;
+function MainWalletPage() {
+	return (
+		<div className="app-container">
+			<Sidebar activePage={activePage} onPageChange={setActivePage} />
+			<main className="main-content">
+				<WalletPage />
+			</main>
+		</div>
+	);
+}
+
+export default MainWalletPage;

@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import WalletPage from './pages/WalletPage';
+import MainPage from './pages/MainPage'
 
 function App() {
 	const [activePage, setActivePage] = useState('wallet');
 
 	return (
-		<div className="app-container">
-			<Sidebar activePage={activePage} onPageChange={setActivePage} />
-			<main className="main-content">
-				<WalletPage />
-			</main>
-		</div>
+		<MainPage />
 	);
 }
 
