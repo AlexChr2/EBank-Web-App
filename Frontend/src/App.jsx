@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
-import WalletPage from './components/WalletPage';
+import WalletPage from './pages/WalletPage';
 
 function App() {
 	const [activePage, setActivePage] = useState('wallet');
