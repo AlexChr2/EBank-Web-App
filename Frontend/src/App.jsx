@@ -11,84 +11,84 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { UserProvider } from './contexts/UserContext';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentRoute, setCurrentRoute] = useState('dashboard');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [currentRoute, setCurrentRoute] = useState('dashboard');
+	const [isAdmin, setIsAdmin] = useState(false);
+	const [showAuthModal, setShowAuthModal] = useState(false);
 
-  useEffect(() => {
-    const handleTransactionEvent = (event) => {
-      const { type } = event.detail;
-      window.dispatchEvent(new CustomEvent('showTransactionForm', { detail: { type } }));
-    };
+	useEffect(() => {
+		const handleTransactionEvent = (event) => {
+			const { type } = event.detail;
+			window.dispatchEvent(new CustomEvent('showTransactionForm', { detail: { type } }));
+		};
 
-    window.addEventListener('initiateTransaction', handleTransactionEvent);
+		window.addEventListener('initiateTransaction', handleTransactionEvent);
 
-    return () => {
-      window.removeEventListener('initiateTransaction', handleTransactionEvent);
-    };
-  }, []);
+		return () => {
+			window.removeEventListener('initiateTransaction', handleTransactionEvent);
+		};
+	}, []);
 
-  const handleLogout = async () => {
-    setIsLoggedIn(false);
-    setCurrentRoute('dashboard');
-  };
+	const handleLogout = async () => {
+		setIsLoggedIn(false);
+		setCurrentRoute('dashboard');
+	};
 
-  const handleNavigate = (route) => {
-    if (route === 'logout') {
-      handleLogout();
-    } else {
-      setCurrentRoute(route);
-    }
-  };
+	const handleNavigate = (route) => {
+		if (route === 'logout') {
+			handleLogout();
+		} else {
+			setCurrentRoute(route);
+		}
+	};
 
-  const handleAuthSuccess = (email) => {
-    setIsLoggedIn(true);
-    setShowAuthModal(false);
-    setIsAdmin(email.endsWith('@admin.com'));
-    setCurrentRoute('dashboard');
-  };
+	const handleAuthSuccess = (email) => {
+		setIsLoggedIn(true);
+		setShowAuthModal(false);
+		setIsAdmin(email.endsWith('@admin.com'));
+		setCurrentRoute('dashboard');
+	};
 
-  return (
-    <ThemeProvider>
-      <UserProvider>
-        <div className="min-h-screen bg-white">
-          {!isLoggedIn ? (
-            <>
-              <Hero onAuthClick={() => setShowAuthModal(true)} />
-              <Testimonials />
-              <Contact />
-              <AuthModal
-                isOpen={showAuthModal}
-                onClose={() => setShowAuthModal(false)}
-                onSuccess={handleAuthSuccess}
-              />
-            </>
-          ) : (
-            <div className="flex h-screen overflow-hidden">
-              <Sidebar
-                isAdmin={isAdmin}
-                currentRoute={currentRoute}
-                onNavigate={handleNavigate}
-              />
-              <main className="flex-1 relative">
-                <div className="absolute inset-0 overflow-y-auto">
-                  <div className="p-8">
-                    {currentRoute === 'admin' && isAdmin ? (
-                      <AdminDashboard />
-                    ) : (
-                      <DashboardContent />
-                    )}
-                  </div>
-                </div>
-              </main>
-            </div>
-          )}
-          <Toaster position="top-right" />
-        </div>
-      </UserProvider>
-    </ThemeProvider>
-  );
+	return (
+		<ThemeProvider>
+			<UserProvider>
+				<div className="min-h-screen bg-white">
+					{!isLoggedIn ? (
+						<>
+							<Hero onAuthClick={() => setShowAuthModal(true)} />
+							<Testimonials />
+							<Contact />
+							<AuthModal
+								isOpen={showAuthModal}
+								onClose={() => setShowAuthModal(false)}
+								onSuccess={handleAuthSuccess}
+							/>
+						</>
+					) : (
+						<div className="flex h-screen overflow-hidden">
+							<Sidebar
+								isAdmin={isAdmin}
+								currentRoute={currentRoute}
+								onNavigate={handleNavigate}
+							/>
+							<main className="flex-1 relative">
+								<div className="absolute inset-0 overflow-y-auto">
+									<div className="p-8">
+										{currentRoute === 'admin' && isAdmin ? (
+											<AdminDashboard />
+										) : (
+											<DashboardContent />
+										)}
+									</div>
+								</div>
+							</main>
+						</div>
+					)}
+					<Toaster position="top-right" />
+				</div>
+			</UserProvider>
+		</ThemeProvider>
+	);
 }
 
 export default App;
