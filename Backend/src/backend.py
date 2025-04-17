@@ -35,6 +35,32 @@ def create_app():
 
 		return jsonify({"success": True, "email": email}), 201
 
+	@app.route("/api/login", methods=["POST"])
+	def login():
+		data = request.json
+		if not data:
+			return jsonify({"error": "Invalid or missing JSON"}), 400
+
+		email = data.get("email")
+		password = data.get("password")
+
+		if not email or not password:
+			return jsonify({"error": "Missing fields"}), 400
+
+		hashedpw = hashlib.sha256(password.encode()).hexdigest()
+
+		from sqlalchemy import select
+		stmt = select(User).where(User.email == email)
+		user = db.session.execute(stmt).scalars().first()
+
+		if not user:
+			return jsonify({"error": "User not found"}), 404
+
+		if user.password != hashedpw:
+			return jsonify({"error": "Incorrect password"}), 401  # Unauthorized
+
+		return jsonify({"id": user.id, "email": user.email}), 200
+
 	@app.route("/api/users", methods=["GET"])
 	def get_users():
 		users = db.session.query(User)
