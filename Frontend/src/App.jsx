@@ -84,7 +84,7 @@ function App() {
 							</main>
 						</div>
 					)}
-					<Toaster position="top-right" />
+					<Toaster position="top-center" />
 				</div>
 			</UserProvider>
 		</ThemeProvider>
