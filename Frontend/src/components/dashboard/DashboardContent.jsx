@@ -7,6 +7,7 @@ import TransactionHistory from "../transactions/TransactionHistory";
 import StatisticsView from "../statistics/StatisticsView";
 import toast from "react-hot-toast";
 import { useTheme } from "../../contexts/ThemeContext";
+import { createECard, getCards } from "../../ApiService";
 
 const initialWallets = [
 	{
@@ -78,6 +79,7 @@ export default function DashboardContent() {
 			createdAt: new Date(),
 		};
 		setWallets([...wallets, newWallet]);
+		createECard(name);
 		toast.success("Card created successfully!");
 	};
 

@@ -14,6 +14,15 @@ export const logout = async() => {
 	return await sendToBackend("/api/logout", "POST");
 }
 
+export const createECard = async(name) => {
+	const ecard = { name: name };
+	return await sendToBackend("/api/create-card", "POST", ecard);
+}
+
+export const getCards = async() => {
+	return await sendToBackend("/api/my-cards", "GET");
+}
+
 const sendToBackend = async(routePoint, method, body = null, additionalHeaders = {}) => {
 	try {
 		const options = {

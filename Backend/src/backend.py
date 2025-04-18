@@ -3,9 +3,19 @@ from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from sqlalchemy.exc import IntegrityError
 import hashlib
+from functools import wraps
 
 from config import Config
 from models import db, User, ECard, Transaction, TransactionType
+
+# decorator function
+def login_required(f):
+	@wraps(f)
+	def decorated_function(*args, **kwargs):
+		if session.get("user_id") is None:
+			return jsonify({"error": "User not signed in!"}), 401
+		return f(*args, **kwargs)
+	return decorated_function
 
 def create_app():
 	app = Flask(__name__)
@@ -66,6 +76,34 @@ def create_app():
 	@app.route("/api/logout", methods=["POST"])
 	def logout():
 		session["user_id"] = None
+
+	# automatically make this card for the user that's signed in
+	@app.route("/api/create-card", methods=["POST"])
+	@login_required
+	def create_card():
+		data = request.json
+		if not data:
+			return jsonify({"error": "Missing fields"}), 400
+
+		name = data.get("name")
+		if not name:
+			return jsonify({"error": "Missing card name"}), 400
+		new_card = ECard(user_id = session.get("user_id"), name = name)
+		db.session.add(new_card)
+		try:
+			db.session.commit()
+		except IntegrityError:
+			db.session.rollback()
+			return jsonify({"error": "Unknown Integrity Error"})
+		return jsonify({"success": True}), 201
+
+	@app.route("/api/my-cards", methods=["GET"])
+	@login_required
+	def get_cards():
+		from sqlalchemy import select
+		stmt = select(ECard).where(ECard.user_id == session.get("user_id"))
+		cards = db.session.execute(stmt).scalars().all()
+		return jsonify([{'name': c.name, 'balance': c.cash_amount} for c in cards])
 
 	@app.route("/api/users", methods=["GET"])
 	def get_users():
