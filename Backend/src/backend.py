@@ -1,5 +1,5 @@
 # backend/app.py
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from sqlalchemy.exc import IntegrityError
 import hashlib
@@ -10,7 +10,8 @@ from models import db, User, ECard, Transaction, TransactionType
 def create_app():
 	app = Flask(__name__)
 	app.config.from_object(Config)
-	CORS(app)  # allow requests from different origins (like localhost:5173)
+	app.secret_key = "abcdef123456#"
+	CORS(app, supports_credentials = True)  # allow requests from different origins (like localhost:5173)
 
 	db.init_app(app)
 
@@ -59,7 +60,12 @@ def create_app():
 		if user.password != hashedpw:
 			return jsonify({"error": "Incorrect password"}), 401  # Unauthorized
 
+		session["user_id"] = user.id
 		return jsonify({"id": user.id, "email": user.email}), 200
+
+	@app.route("/api/logout", methods=["POST"])
+	def logout():
+		session["user_id"] = None
 
 	@app.route("/api/users", methods=["GET"])
 	def get_users():
