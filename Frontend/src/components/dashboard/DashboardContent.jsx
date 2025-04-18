@@ -9,28 +9,9 @@ import toast from "react-hot-toast";
 import { useTheme } from "../../contexts/ThemeContext";
 import { createECard, getCards } from "../../ApiService";
 
-const initialWallets = [
-	{
-		id: "1",
-		userId: "user1",
-		name: "Main Card",
-		balance: 5000,
-		currency: "USD",
-		createdAt: new Date(),
-	},
-	{
-		id: "2",
-		userId: "user1",
-		name: "Savings Card",
-		balance: 10000,
-		currency: "USD",
-		createdAt: new Date(),
-	},
-];
-
 export default function DashboardContent() {
 	const { theme } = useTheme();
-	const [wallets, setWallets] = useState(initialWallets);
+	const [wallets, setWallets] = useState([]);
 	const [transactions, setTransactions] = useState([]);
 	const [showTransactionForm, setShowTransactionForm] = useState(false);
 	const [transactionType, setTransactionType] = useState("deposit");
@@ -38,6 +19,17 @@ export default function DashboardContent() {
 	const transactionRef = useRef(null);
 
 	useEffect(() => {
+		const restoreWallets = async() => {
+			return await getCards()
+				.then(data => {
+						setWallets([...wallets, ...data])
+					}
+				).catch(error => {
+					toast.error(`An error occured: ${error}`);
+				});
+		}
+		restoreWallets();
+
 		const handleShowTransactionForm = (event) => {
 			const { type } = event.detail;
 			setTransactionType(type);
