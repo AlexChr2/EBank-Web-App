@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
+import { registerUser, loginUser } from "../../ApiService";
 
 export default function AuthModal({ isOpen, onClose, onSuccess }) {
 	const [isLogin, setIsLogin] = useState(true);
@@ -15,20 +16,35 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
 		setLoading(true);
 
 		try {
-			// Simulate authentication delay
-			await new Promise((resolve) => setTimeout(resolve, 500));
-
-			// Simple validation for demo purposes
-			if (email.trim() && password.trim()) {
-				toast.success(
-					isLogin ? "Welcome back!" : "Account created successfully!"
-				);
+			if (isLogin && await loginUser(email, password)) {
+				toast.success("Welcome back!");
 				onSuccess(email); // Pass email to determine admin status
+			} else if (!isLogin && await registerUser(email, password)) {
+				toast.success("Account created successfully!");
+				onSuccess(email);
 			} else {
 				throw new Error("Please enter valid credentials");
 			}
 		} catch (error) {
-			toast.error(error instanceof Error ? error.message : "An error occurred");
+			let errorMessage = "An error occurred";
+
+			if (error instanceof Error) {
+				try {
+					const parsed = JSON.parse(error.message);
+					if (parsed && parsed.error) {
+						errorMessage = parsed.error;
+					} else {
+						errorMessage = error.message;
+					}
+				} catch (e) {
+					// Not JSON, use raw error message
+					errorMessage = error.message;
+				}
+			} else if (typeof error === "string") {
+				errorMessage = error;
+			}
+
+			toast.error(errorMessage); // Show clean message
 		} finally {
 			setLoading(false);
 		}

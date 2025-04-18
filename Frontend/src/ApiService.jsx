@@ -1,0 +1,53 @@
+const backendURL = "http://localhost:5000";
+
+export const registerUser = async(email, password) => {
+	const user = { email: email, password: password };
+	return await sendToBackend("/api/create-user", "POST", user);
+};
+
+export const loginUser = async(email, password) => {
+	const user = { email: email, password: password };
+	return await sendToBackend("/api/login", "POST", user);
+};
+
+export const logout = async() => {
+	return await sendToBackend("/api/logout", "POST");
+}
+
+const sendToBackend = async(routePoint, method, body = null, additionalHeaders = {}) => {
+	try {
+		const options = {
+			method,
+			credentials: "include", // send cookies to the back-end
+			headers : {
+				"Content-Type": "application/json",
+				...additionalHeaders, // allow custom headers
+			}
+		}
+
+		// include body method only for methods that allow it
+		if (body && method !== "GET")
+			options.body = JSON.stringify(body);
+
+		const response = await fetch(`${backendURL}${routePoint}`, options);
+
+		if (!response.ok) {
+			const errorText = await response.text().catch(() => "Unknown error!");
+			console.error(`HTTP Error ${response.status}: ${errorText}`)
+			throw new Error(errorText);
+		}
+
+		// avoid parsing empty responses
+		const contentType = response.headers.get("Content-Type");
+		if (contentType && contentType.includes("application/json")) {
+			return await response.json();
+		}
+
+		return await response.text(); // fallback for non-json responses
+	} catch(error) {
+		console.log(`API call failed: ${error}`);
+		throw error;
+	}
+};
+
+export default loginUser;
