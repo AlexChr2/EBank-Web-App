@@ -103,7 +103,7 @@ def create_app():
 		from sqlalchemy import select
 		stmt = select(ECard).where(ECard.user_id == session.get("user_id"))
 		cards = db.session.execute(stmt).scalars().all()
-		return jsonify([{'name': c.name, 'balance': c.cash_amount} for c in cards])
+		return jsonify([{'id': c.id, 'name': c.name, 'balance': c.cash_amount} for c in cards])
 
 	@app.route("/api/users", methods=["GET"])
 	def get_users():
