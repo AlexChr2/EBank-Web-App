@@ -141,7 +141,7 @@ export default function WalletList({
 									<p className="text-sm text-gray-600">
 										{new Intl.NumberFormat("en-US", {
 											style: "currency",
-											currency: "USD",
+											currency: wallet.currency,
 										}).format(wallet.balance)}
 									</p>
 								</div>

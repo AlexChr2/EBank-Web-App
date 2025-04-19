@@ -22,7 +22,10 @@ export default function DashboardContent() {
 		const restoreWallets = async() => {
 			return await getCards()
 				.then(data => {
-						setWallets([...wallets, ...data])
+						// add the currency to the wallet objects
+						for (let i = 0; i < data.length; i++)
+							data[i] = { ...data[i], currency: "USD" };
+						setWallets([...wallets, ...data]);
 					}
 				).catch(error => {
 					toast.error(`An error occured: ${error}`);
