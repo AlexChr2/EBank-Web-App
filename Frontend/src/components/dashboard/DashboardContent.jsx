@@ -7,7 +7,7 @@ import TransactionHistory from "../transactions/TransactionHistory";
 import StatisticsView from "../statistics/StatisticsView";
 import toast from "react-hot-toast";
 import { useTheme } from "../../contexts/ThemeContext";
-import { createECard, getCards } from "../../ApiService";
+import { createECard, deleteCard, getCards, renameCard } from "../../ApiService";
 
 export default function DashboardContent() {
 	const { theme } = useTheme();
@@ -71,16 +71,22 @@ export default function DashboardContent() {
 			createdAt: new Date(),
 		};
 		setWallets([...wallets, newWallet]);
+		// create the card in the backend. TODO: make this be awaited
 		createECard(name);
 		toast.success("Card created successfully!");
 	};
 
 	const handleDeleteWallet = (id) => {
+		// delete the card from the backend. TODO: make this be awaited
+		deleteCard(id);
 		setWallets(wallets.filter((wallet) => wallet.id !== id));
 		toast.success("Card deleted successfully!");
 	};
 
 	const handleUpdateWallet = (id, name) => {
+		// update the backend information. TODO: make this be awaited and don't call
+		// setWallets unless it was successful
+		renameCard(id, name);
 		setWallets(
 			wallets.map((wallet) => (wallet.id === id ? { ...wallet, name } : wallet))
 		);

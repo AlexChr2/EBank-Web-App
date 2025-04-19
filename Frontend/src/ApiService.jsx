@@ -19,6 +19,16 @@ export const createECard = async(name) => {
 	return await sendToBackend("/api/create-card", "POST", ecard);
 }
 
+export const renameCard = async(card_id, new_name) => {
+	const ecard = { card_id: card_id, new_card_name: new_name };
+	return await sendToBackend("/api/rename-card", "PUT", ecard);
+}
+
+export const deleteCard = async(card_id) => {
+	const ecard = { card_id: card_id };
+	return await sendToBackend("/api/delete-card", "DELETE", ecard);
+}
+
 export const getCards = async() => {
 	return await sendToBackend("/api/my-cards", "GET");
 }

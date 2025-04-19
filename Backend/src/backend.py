@@ -1,7 +1,7 @@
 # backend/app.py
 from flask import Flask, jsonify, request, session
 from flask_cors import CORS
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DatabaseError
 import hashlib
 from functools import wraps
 
@@ -96,6 +96,57 @@ def create_app():
 			db.session.rollback()
 			return jsonify({"error": "Unknown Integrity Error"})
 		return jsonify({"success": True}), 201
+
+	@app.route("/api/rename-card", methods=["PUT"])
+	@login_required
+	def rename_card():
+		data = request.json
+		if not data:
+			return jsonify({"error": "Missing fields"}), 400
+
+		card_id = int(data.get("card_id"))
+		new_name = data.get("new_card_name")
+		if not card_id:
+			return jsonify({"error": "Missing card ID"}), 400
+		if not new_name:
+			return jsonify({"error": "Missing new card name"}), 400
+		from sqlalchemy import select
+		stmt = select(ECard).where(ECard.id == card_id)
+		ecard = db.session.execute(stmt).scalars().first()
+
+		if ecard:
+			ecard.name = new_name
+			try:
+				db.session.commit()
+			except DatabaseError:
+				db.session.rollback()
+				return jsonify({"error": "Unknown database error!"})
+			return jsonify({"success": True}), 201
+		else:
+			return jsonify({"error": "Failed to find card"})
+
+	@app.route("/api/delete-card", methods=["DELETE"])
+	@login_required
+	def delete_card():
+		data = request.json
+		if not data or data.get("card_id") is None:
+			return jsonify({"error": "Missing fields"}), 401
+
+		card_id = int(data.get("card_id"))
+
+		from sqlalchemy import select
+		stmt = select(ECard).where(ECard.id == card_id)
+		ecard = db.session.execute(stmt).scalars().first()
+
+		if ecard:
+			db.session.delete(ecard)
+			try:
+				db.session.commit()
+			except DatabaseError:
+				db.session.rollback()
+				return jsonify({"error": "Unknown database error"})
+			return jsonify({"success": True}), 201
+		return jsonify({"error": "Failed to find card"})
 
 	@app.route("/api/my-cards", methods=["GET"])
 	@login_required
