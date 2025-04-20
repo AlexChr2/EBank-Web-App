@@ -65,18 +65,25 @@ export default function DashboardContent() {
 	}, []);
 
 	const handleCreateWallet = (name) => {
-		const newWallet = {
-			id: String(Date.now()),
-			userId: "user1",
-			name,
-			balance: 0,
-			currency: "USD",
-			createdAt: new Date(),
-		};
-		setWallets([...wallets, newWallet]);
-		// create the card in the backend. TODO: make this be awaited
-		createECard(name);
-		toast.success("Card created successfully!");
+		createECard(name)
+			.then((value) => {
+				if (value.success) {
+					const newWallet = {
+						id: value.card_id,
+						name,
+						balance: 0,
+						currency: "USD"
+					}
+					setWallets([...wallets, newWallet]);
+					toast.success("Card created successfully!");
+				}
+			})
+			.catch((msg) => {
+				if (msg.error)
+					toast.error(`An error occured: ${msg.error}`);
+				else
+					toast.error(`An error occured: ${msg}`);
+			});
 	};
 
 	const handleDeleteWallet = (id) => {

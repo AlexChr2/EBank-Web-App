@@ -95,7 +95,7 @@ def create_app():
 		except IntegrityError:
 			db.session.rollback()
 			return jsonify({"error": "Unknown Integrity Error"}), 400
-		return jsonify({"success": True}), 201
+		return jsonify({"success": True, "card_id": new_card.id}), 201
 
 	@app.route("/api/rename-card", methods=["PUT"])
 	@login_required
