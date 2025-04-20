@@ -3,7 +3,7 @@ import { ArrowDownToLine, ArrowUpFromLine, Send } from "lucide-react";
 
 export default function TransactionList({ transactions, wallets }) {
 	const getWalletName = (id) => {
-		return wallets.find((w) => w.id === id)?.name || "Unknown Wallet";
+		return wallets.find((w) => w.id == id)?.name || "Unknown Wallet";
 	};
 
 	const icons = {

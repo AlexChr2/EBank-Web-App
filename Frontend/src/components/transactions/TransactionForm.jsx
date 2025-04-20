@@ -14,8 +14,8 @@ export default function TransactionForm({ type, wallets, onComplete }) {
 	const [showConfirmation, setShowConfirmation] = useState(false);
 
 	const getConfirmationMessage = () => {
-		const sourceCard = wallets.find((w) => w.id === sourceWalletId);
-		const recipientCard = wallets.find((w) => w.id === recipientWalletId);
+		const sourceCard = wallets.find((w) => w.id == sourceWalletId);
+		const recipientCard = wallets.find((w) => w.id == recipientWalletId);
 		const formattedAmount = new Intl.NumberFormat("en-US", {
 			style: "currency",
 			currency: "USD",

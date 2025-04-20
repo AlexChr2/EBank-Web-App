@@ -91,7 +91,7 @@ export default function DashboardContent() {
 		// setWallets unless it was successful
 		renameCard(id, name);
 		setWallets(
-			wallets.map((wallet) => (wallet.id === id ? { ...wallet, name } : wallet))
+			wallets.map((wallet) => (wallet.id == id ? { ...wallet, name } : wallet))
 		);
 		toast.success("Card updated successfully!");
 	};
@@ -109,7 +109,7 @@ export default function DashboardContent() {
 
 		setWallets((currentWallets) => {
 			return currentWallets.map((wallet) => {
-				if (wallet.id === transaction.walletId) {
+				if (wallet.id == transaction.walletId) {
 					const newBalance =
 						transaction.type === "deposit"
 							? wallet.balance + transaction.amount
@@ -118,7 +118,7 @@ export default function DashboardContent() {
 				}
 				if (
 					transaction.type === "transfer" &&
-					wallet.id === transaction.recipientWalletId
+					wallet.id == transaction.recipientWalletId
 				) {
 					return { ...wallet, balance: wallet.balance + transaction.amount };
 				}
