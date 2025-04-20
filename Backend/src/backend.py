@@ -145,8 +145,37 @@ def create_app():
 			except DatabaseError:
 				db.session.rollback()
 				return jsonify({"error": "Unknown database error"})
-			return jsonify({"success": True}), 201
-		return jsonify({"error": "Failed to find card"})
+		else:
+			return jsonify({"error": "Failed to find card"})
+
+		def anonymize_field(model_class, filter_field, update_field, filter_value, update_value):
+			stmt = select(model_class).where(filter_field == filter_value)
+			records = db.session.execute(stmt).scalars().all()
+			for record in records:
+				setattr(record, update_field.key, update_value)
+			try:
+				db.session.commit()
+			except DatabaseError:
+				db.session.rollback()
+				return jsonify({"error": "Unknown database error"})
+
+		# when removing a card, make sure to change all of its transactions to
+		# an anonymous state
+		anonymize_field(
+			Transaction,
+			Transaction.source_card_id,
+			Transaction.source_card_id,
+			card_id,
+			-1
+		)
+		anonymize_field(
+			Transaction,
+			Transaction.recipient_card_id,
+			Transaction.recipient_card_id,
+			card_id,
+			-1
+		)
+		return jsonify({"success": True}), 201
 
 	@app.route("/api/my-cards", methods=["GET"])
 	@login_required
