@@ -6,9 +6,9 @@ from datetime import datetime
 db = SQLAlchemy()
 
 class TransactionType(Enum):
-	DEPOSIT    = "deposit"
-	WITHDRAWAL = "withdrawal"
-	TRANSFER   = "transfer"
+	deposit    = "deposit"
+	withdrawal = "withdrawal"
+	transfer   = "transfer"
 
 class User(db.Model):
 	__tablename__ = 'users'
