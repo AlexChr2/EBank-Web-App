@@ -33,6 +33,17 @@ export const getCards = async() => {
 	return await sendToBackend("/api/my-cards", "GET");
 }
 
+export const makeTransaction = async(type, srcCardId, resCardId, amt, desc) => {
+	const transaction = {
+		type: type,
+		source_card_id: srcCardId,
+		recipient_card_id: resCardId,
+		amount: amt,
+		description: desc
+	};
+	return await sendToBackend("/api/make-transaction", "POST", transaction);
+}
+
 const sendToBackend = async(routePoint, method, body = null, additionalHeaders = {}) => {
 	try {
 		const options = {

@@ -94,7 +94,7 @@ def create_app():
 			db.session.commit()
 		except IntegrityError:
 			db.session.rollback()
-			return jsonify({"error": "Unknown Integrity Error"})
+			return jsonify({"error": "Unknown Integrity Error"}), 400
 		return jsonify({"success": True}), 201
 
 	@app.route("/api/rename-card", methods=["PUT"])
@@ -155,6 +155,42 @@ def create_app():
 		stmt = select(ECard).where(ECard.user_id == session.get("user_id"))
 		cards = db.session.execute(stmt).scalars().all()
 		return jsonify([{'id': c.id, 'name': c.name, 'balance': c.cash_amount} for c in cards])
+
+	@app.route("/api/make-transaction", methods=["POST"])
+	@login_required
+	def make_transaction():
+		data = request.json
+		if not data:
+			return jsonify({"error": "Missing fields"}), 401
+
+		transactiontype = data.get("type")
+		source_card_id = data.get("source_card_id")
+		recipient_card_id = data.get("recipient_card_id")
+		amount = data.get("amount")
+		desc = data.get("description")
+		if all(x is None for x in [
+			transactiontype, source_card_id, amount, desc
+		]):
+			return jsonify({"error": "Missing arguments"}), 400
+
+		if transactiontype == "transfer" and recipient_card_id is None:
+			return jsonify({"error": "Recipient card ID required for transfer!"}), 400
+
+		newTransaction = Transaction(
+			user_id = session.get("user_id"),
+			type = transactiontype,
+			source_card_id = source_card_id,
+			recipient_card_id = recipient_card_id,
+			amount = amount,
+			description = desc
+		)
+		db.session.add(newTransaction)
+		try:
+			db.session.commit()
+		except IntegrityError:
+			db.session.rollback()
+			return jsonify({"error": "Unknown integrity error"}), 400
+		return jsonify({"success": True}), 201
 
 	@app.route("/api/users", methods=["GET"])
 	def get_users():

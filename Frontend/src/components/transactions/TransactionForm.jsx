@@ -42,7 +42,7 @@ export default function TransactionForm({ type, wallets, onComplete }) {
 				throw new Error("Please enter a valid amount");
 			}
 
-			const sourceCard = wallets.find((w) => w.id === sourceWalletId);
+			const sourceCard = wallets.find((w) => w.id == sourceWalletId);
 			if (!sourceCard) {
 				throw new Error("Please select a valid card");
 			}
@@ -55,7 +55,7 @@ export default function TransactionForm({ type, wallets, onComplete }) {
 				if (!recipientWalletId) {
 					throw new Error("Please select a recipient card");
 				}
-				if (recipientWalletId === sourceWalletId) {
+				if (recipientWalletId == sourceWalletId) {
 					throw new Error("Cannot transfer to the same card");
 				}
 				if (sourceCard.balance < numAmount) {
@@ -74,14 +74,12 @@ export default function TransactionForm({ type, wallets, onComplete }) {
 	const handleConfirmTransaction = async () => {
 		setLoading(true);
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 800));
-
 			const transaction = {
 				id: String(Date.now()),
 				walletId: sourceWalletId,
 				type,
 				amount: parseFloat(amount),
-				description: description.trim() || `${type} transaction`,
+				description: description.trim() || "",
 				createdAt: new Date(),
 				recipientWalletId: type === "transfer" ? recipientWalletId : undefined,
 			};
@@ -91,8 +89,9 @@ export default function TransactionForm({ type, wallets, onComplete }) {
 			setDescription("");
 			setRecipientWalletId("");
 			setShowConfirmation(false);
-		} catch {
+		} catch(error) {
 			toast.error("Transaction failed");
+			console.error(`Transaction failed: ${error}`);
 		} finally {
 			setLoading(false);
 		}

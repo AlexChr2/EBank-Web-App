@@ -7,7 +7,7 @@ import TransactionHistory from "../transactions/TransactionHistory";
 import StatisticsView from "../statistics/StatisticsView";
 import toast from "react-hot-toast";
 import { useTheme } from "../../contexts/ThemeContext";
-import { createECard, deleteCard, getCards, renameCard } from "../../ApiService";
+import { createECard, deleteCard, getCards, makeTransaction, renameCard } from "../../ApiService";
 
 export default function DashboardContent() {
 	const { theme } = useTheme();
@@ -97,6 +97,14 @@ export default function DashboardContent() {
 	};
 
 	const handleTransaction = (transaction) => {
+		// add the transaction to the back-end. TODO: make this be awaited
+		makeTransaction(
+			transaction.type,
+			transaction.walletId,
+			transaction.recipientWalletId,
+			transaction.amount,
+			transaction.description)
+			.catch(error => console.log(error));
 		setTransactions([transaction, ...transactions]);
 
 		setWallets((currentWallets) => {
