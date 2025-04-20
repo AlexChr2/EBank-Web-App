@@ -35,7 +35,6 @@ export default function DashboardContent() {
 		const restoreTransactions = async() => {
 			return await getTransactions()
 				.then(data => {
-					console.log(data);
 					setTransactions(data);
 				}).catch(error => {
 					toast.error(`An error occured: ${error}`);
