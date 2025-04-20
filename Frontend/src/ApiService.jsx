@@ -33,6 +33,10 @@ export const getCards = async() => {
 	return await sendToBackend("/api/my-cards", "GET");
 }
 
+export const getTransactions = async() => {
+	return await sendToBackend("/api/get-transactions", "GET");
+}
+
 export const makeTransaction = async(type, srcCardId, resCardId, amt, desc) => {
 	const transaction = {
 		type: type,

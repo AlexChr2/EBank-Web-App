@@ -221,6 +221,25 @@ def create_app():
 			return jsonify({"error": "Unknown integrity error"}), 400
 		return jsonify({"success": True}), 201
 
+	@app.route("/api/get-transactions", methods=["GET"])
+	@login_required
+	def get_transactions():
+		from sqlalchemy import select
+		stmt = (select(Transaction)
+			.where(Transaction.user_id == session.get("user_id"))
+			.order_by(Transaction.timestamp.desc())
+		)
+		transactions = db.session.execute(stmt).scalars().all()
+		return jsonify([{
+			'id': t.id,
+			'type': t.type.value,
+			'walletId': t.source_card_id,
+			'recipientWalletId': t.recipient_card_id,
+			'amount': t.amount,
+			'description': t.description,
+			'createdAt': t.timestamp
+		} for t in transactions])
+
 	@app.route("/api/users", methods=["GET"])
 	def get_users():
 		users = db.session.query(User)

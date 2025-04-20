@@ -7,7 +7,7 @@ import TransactionHistory from "../transactions/TransactionHistory";
 import StatisticsView from "../statistics/StatisticsView";
 import toast from "react-hot-toast";
 import { useTheme } from "../../contexts/ThemeContext";
-import { createECard, deleteCard, getCards, makeTransaction, renameCard } from "../../ApiService";
+import { createECard, deleteCard, getCards, getTransactions, makeTransaction, renameCard } from "../../ApiService";
 
 export default function DashboardContent() {
 	const { theme } = useTheme();
@@ -31,7 +31,18 @@ export default function DashboardContent() {
 					toast.error(`An error occured: ${error}`);
 				});
 		}
+
+		const restoreTransactions = async() => {
+			return await getTransactions()
+				.then(data => {
+					console.log(data);
+					setTransactions(data);
+				}).catch(error => {
+					toast.error(`An error occured: ${error}`);
+				});
+		}
 		restoreWallets();
+		restoreTransactions();
 
 		const handleShowTransactionForm = (event) => {
 			const { type } = event.detail;
