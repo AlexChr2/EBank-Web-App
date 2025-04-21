@@ -79,6 +79,48 @@ export default function StatisticsView({ transactions, wallets }) {
 	).size;
 	const transactionsPerDay = uniqueDays ? totalTransactions / uniqueDays : 0;
 
+
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+
+	// Build an array of the last 7 days
+	const last7Days = [...Array(7)].map((_, i) => {
+		const d = new Date(today);
+		d.setDate(today.getDate() - (6 - i));
+		return d;
+	});
+
+	// Map day string to number of transactions (used for Transaction Velocity)
+	const dailyCounts = last7Days.map((day) => {
+		const dayStart = new Date(day);
+		const dayEnd = new Date(day);
+		dayEnd.setDate(dayEnd.getDate() + 1);
+
+		const count = transactions.filter((tx) => {
+			const txDate = new Date(tx.createdAt);
+			return txDate >= dayStart && txDate < dayEnd;
+		}).length;
+
+		return count;
+	});
+
+	// Used for the Average Transaction graph
+	const dailyAverages = last7Days.map((day) => {
+		const dayStart = new Date(day);
+		const dayEnd = new Date(day);
+		dayEnd.setDate(dayEnd.getDate() + 1);
+
+		const dayTransactions = transactions.filter((tx) => {
+			const txDate = new Date(tx.createdAt);
+			return txDate >= dayStart && txDate < dayEnd;
+		});
+
+		if (dayTransactions.length === 0) return 0;
+
+		const total = dayTransactions.reduce((sum, tx) => sum + tx.amount, 0);
+		return total / dayTransactions.length;
+	});
+
 	const generalStats = [
 		{
 			label: "Deposits Ratio",
@@ -233,15 +275,13 @@ export default function StatisticsView({ transactions, wallets }) {
 			isPositive: averageTransactionAmount > 1000,
 			chartType: "line",
 			chartData: {
-				labels: [...Array(7)].map((_, i) => {
-					const d = new Date();
-					d.setDate(d.getDate() - (6 - i));
-					return d.toLocaleDateString("en-US", { weekday: "short" });
-				}),
+				labels: last7Days.map((d) =>
+					d.toLocaleString("en-US", { weekday: "short" })
+				),
 				datasets: [
 					{
 						label: "Average Amount",
-						data: [...Array(7)].map(() => Math.random() * 1000 + 500),
+						data: dailyAverages,
 						borderColor: "#818cf8",
 						backgroundColor: "#a5b4fc20",
 						tension: 0.4,
@@ -277,15 +317,13 @@ export default function StatisticsView({ transactions, wallets }) {
 			isPositive: transactionsPerDay > 2,
 			chartType: "line",
 			chartData: {
-				labels: [...Array(7)].map((_, i) => {
-					const d = new Date();
-					d.setDate(d.getDate() - (6 - i));
-					return d.toLocaleDateString("en-US", { weekday: "short" });
-				}),
+				labels: last7Days.map((d) =>
+					d.toLocaleString("en-US", { weekday: "short" })
+				),
 				datasets: [
 					{
 						label: "Transactions",
-						data: [...Array(7)].map(() => Math.floor(Math.random() * 5) + 1),
+						data: dailyCounts,
 						borderColor: "#fbbf24",
 						backgroundColor: "#fcd34d20",
 						tension: 0.4,
