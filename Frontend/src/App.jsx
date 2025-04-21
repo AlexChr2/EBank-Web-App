@@ -9,6 +9,7 @@ import DashboardContent from './components/dashboard/DashboardContent';
 import AdminDashboard from './components/admin/AdminDashboard';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { UserProvider } from './contexts/UserContext';
+import { logout } from './ApiService';
 
 function App() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,6 +31,8 @@ function App() {
 	}, []);
 
 	const handleLogout = async () => {
+		// logout from the backend
+		logout();
 		setIsLoggedIn(false);
 		setCurrentRoute('dashboard');
 	};

@@ -76,6 +76,7 @@ def create_app():
 	@app.route("/api/logout", methods=["POST"])
 	def logout():
 		session["user_id"] = None
+		return jsonify({"success": True}), 201
 
 	# automatically make this card for the user that's signed in
 	@app.route("/api/create-card", methods=["POST"])
