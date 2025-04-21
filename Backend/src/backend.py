@@ -214,11 +214,29 @@ def create_app():
 			description = desc
 		)
 		db.session.add(newTransaction)
+
+		# now update the balance of both source_card and recipient_card (if exists)
+		from sqlalchemy import select
+		stmt = select(ECard).where(ECard.id == source_card_id)
+		source_card = db.session.execute(stmt).scalars().first()
+		if transactiontype == "deposit":
+			source_card.cash_amount += amount
+		else:
+			source_card.cash_amount -= amount
+
+		if recipient_card_id is not None: # if it's a transfer
+			from sqlalchemy import select
+			stmt = select(ECard).where(ECard.id == recipient_card_id)
+			recipient_card = db.session.execute(stmt).scalars().first()
+			recipient_card.cash_amount += amount
+
+		# commit both changes at once, if one fails, rollback
 		try:
 			db.session.commit()
 		except IntegrityError:
 			db.session.rollback()
 			return jsonify({"error": "Unknown integrity error"}), 400
+
 		return jsonify({"success": True}), 201
 
 	@app.route("/api/get-transactions", methods=["GET"])
