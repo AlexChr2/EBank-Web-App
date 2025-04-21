@@ -269,10 +269,10 @@ export default function StatisticsView({ transactions, wallets }) {
 			icon: TrendingUp,
 			color: "bg-indigo-50",
 			textColor: "text-indigo-600",
-			trend: averageTransactionAmount > 1000 ? "up" : "down",
+			trend: averageTransactionAmount < 1000 ? "up" : "down",
 			trendColor:
-				averageTransactionAmount > 1000 ? "text-emerald-600" : "text-rose-600",
-			isPositive: averageTransactionAmount > 1000,
+				averageTransactionAmount < 1000 ? "text-emerald-600" : "text-rose-600",
+			isPositive: averageTransactionAmount < 1000,
 			chartType: "line",
 			chartData: {
 				labels: last7Days.map((d) =>
