@@ -120,8 +120,8 @@ export default function DashboardContent() {
 			transaction.walletId,
 			transaction.recipientWalletId,
 			transaction.amount,
-			transaction.description)
-			.catch(error => console.log(error));
+			transaction.description
+		).catch(error => console.log(error));
 		setTransactions([transaction, ...transactions]);
 
 		setWallets((currentWallets) => {
