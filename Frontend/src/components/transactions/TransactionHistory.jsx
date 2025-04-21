@@ -25,11 +25,11 @@ export default function TransactionHistory({ transactions, wallets }) {
 
 	const filteredTransactions = transactions.filter((transaction) => {
 		if (filterType !== "all" && transaction.type !== filterType) return false;
-		if (sourceWalletId && transaction.walletId !== sourceWalletId) return false;
+		if (sourceWalletId && transaction.walletId != sourceWalletId) return false;
 		if (
 			filterType === "transfer" &&
 			recipientWalletId &&
-			transaction.recipientWalletId !== recipientWalletId
+			transaction.recipientWalletId != recipientWalletId
 		)
 			return false;
 
