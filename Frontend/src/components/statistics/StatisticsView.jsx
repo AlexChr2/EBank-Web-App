@@ -351,60 +351,61 @@ export default function StatisticsView({ transactions, wallets }) {
 
 	return (
 		<div
-			className="flex-none p-6 bg-white border-b overflow-y-auto"
-			style={{ maxHeight: "calc(100vh - 12rem)" }}
+			className="flex flex-col h-full"
 		>
 			<h2 className="text-xl font-semibold text-gray-900 mb-6">
 				Overall Statistics
 			</h2>
-			<div className="grid grid-cols-2 gap-6">
-				{generalStats.map((stat, index) => (
-					<div key={index} className="bg-white p-6 rounded-xl shadow-sm">
-							<div className="flex flex-col h-full">
-								<div className="flex items-center gap-4 mb-4">
-									<div
-										className={`p-3 rounded-lg ${stat.color} ${stat.textColor}`}
-									>
-										<stat.icon className="w-6 h-6" />
+			<div className="flex-grow overflow-y-auto p-6">
+				<div className="grid grid-cols-2 gap-6">
+					{generalStats.map((stat, index) => (
+						<div key={index} className="bg-white p-6 rounded-xl shadow-sm">
+								<div className="flex flex-col h-full">
+									<div className="flex items-center gap-4 mb-4">
+										<div
+											className={`p-3 rounded-lg ${stat.color} ${stat.textColor}`}
+										>
+											<stat.icon className="w-6 h-6" />
+										</div>
+										<div>
+											<h3 className="font-medium text-gray-900">{stat.label}</h3>
+											<p className="text-sm text-gray-500">{stat.description}</p>
+										</div>
 									</div>
-									<div>
-										<h3 className="font-medium text-gray-900">{stat.label}</h3>
-										<p className="text-sm text-gray-500">{stat.description}</p>
+									<div className="flex items-center gap-2 mb-4">
+										<p className={`text-2xl font-semibold ${stat.textColor}`}>
+											{stat.value}
+										</p>
+										{stat.trend === "up" ? (
+											<ChevronUp className={`w-5 h-5 ${stat.trendColor}`} />
+										) : (
+											<ChevronDown className={`w-5 h-5 ${stat.trendColor}`} />
+										)}
+										<span className={`text-sm ${stat.trendColor}`}>
+											{stat.isPositive ? "Positive Trend" : "Needs Attention"}
+										</span>
+									</div>
+									<div className="h-48 flex-grow">
+										{stat.chartType === "line" && (
+											<Line data={stat.chartData} options={stat.chartOptions} />
+										)}
+										{stat.chartType === "bar" && (
+											<Bar data={stat.chartData} options={stat.chartOptions} />
+										)}
+										{stat.chartType === "pie" && (
+											<Pie data={stat.chartData} options={stat.chartOptions} />
+										)}
+										{stat.chartType === "doughnut" && (
+											<Doughnut
+												data={stat.chartData}
+												options={stat.chartOptions}
+											/>
+										)}
 									</div>
 								</div>
-								<div className="flex items-center gap-2 mb-4">
-									<p className={`text-2xl font-semibold ${stat.textColor}`}>
-										{stat.value}
-									</p>
-									{stat.trend === "up" ? (
-										<ChevronUp className={`w-5 h-5 ${stat.trendColor}`} />
-									) : (
-										<ChevronDown className={`w-5 h-5 ${stat.trendColor}`} />
-									)}
-									<span className={`text-sm ${stat.trendColor}`}>
-										{stat.isPositive ? "Positive Trend" : "Needs Attention"}
-									</span>
-								</div>
-								<div className="h-48 flex-grow">
-									{stat.chartType === "line" && (
-										<Line data={stat.chartData} options={stat.chartOptions} />
-									)}
-									{stat.chartType === "bar" && (
-										<Bar data={stat.chartData} options={stat.chartOptions} />
-									)}
-									{stat.chartType === "pie" && (
-										<Pie data={stat.chartData} options={stat.chartOptions} />
-									)}
-									{stat.chartType === "doughnut" && (
-										<Doughnut
-											data={stat.chartData}
-											options={stat.chartOptions}
-										/>
-									)}
-								</div>
-							</div>
-					</div>
-				))}
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
 	);
