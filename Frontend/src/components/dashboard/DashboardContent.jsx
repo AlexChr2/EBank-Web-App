@@ -270,7 +270,7 @@ export default function DashboardContent() {
 				</div>
 			) : (
 				<div
-					className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-16rem)] ${
+					className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-22rem)] ${
 						theme === "dark" ? "bg-gray-800" : "bg-white"
 					}`}
 				>
