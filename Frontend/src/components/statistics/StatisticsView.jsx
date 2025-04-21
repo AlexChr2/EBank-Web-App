@@ -350,17 +350,16 @@ export default function StatisticsView({ transactions, wallets }) {
 	];
 
 	return (
-		<div className="h-full flex flex-col">
-			<div
-				className="flex-none p-6 bg-white border-b overflow-y-auto"
-				style={{ maxHeight: "calc(100vh - 12rem)" }}
-			>
-				<h2 className="text-xl font-semibold text-gray-900 mb-6">
-					Overall Statistics
-				</h2>
-				<div className="grid grid-cols-2 gap-6">
-					{generalStats.map((stat, index) => (
-						<div key={index} className="bg-white p-6 rounded-xl shadow-sm">
+		<div
+			className="flex-none p-6 bg-white border-b overflow-y-auto"
+			style={{ maxHeight: "calc(100vh - 12rem)" }}
+		>
+			<h2 className="text-xl font-semibold text-gray-900 mb-6">
+				Overall Statistics
+			</h2>
+			<div className="grid grid-cols-2 gap-6">
+				{generalStats.map((stat, index) => (
+					<div key={index} className="bg-white p-6 rounded-xl shadow-sm">
 							<div className="flex flex-col h-full">
 								<div className="flex items-center gap-4 mb-4">
 									<div
@@ -404,66 +403,8 @@ export default function StatisticsView({ transactions, wallets }) {
 									)}
 								</div>
 							</div>
-						</div>
-					))}
-				</div>
-			</div>
-
-			<div className="flex-1 flex">
-				<div className="w-1/3 bg-gray-50 p-6 border-r overflow-y-auto">
-					<h3 className="text-lg font-semibold text-gray-900 mb-4">
-						Select Card
-					</h3>
-					<div className="space-y-3">
-						{wallets.map((wallet) => (
-							<button
-								key={wallet.id}
-								onClick={() => setSelectedCard(wallet.id)}
-								className={`w-full flex items-center gap-3 p-4 rounded-lg transition-all ${
-									selectedCard === wallet.id
-										? "bg-blue-500 text-white shadow-md"
-										: "bg-white text-gray-900 hover:bg-gray-100"
-								}`}
-							>
-								<CreditCard className="w-5 h-5" />
-								<div className="text-left">
-									<p className="font-medium">{wallet.name}</p>
-									<p
-										className={`text-sm ${
-											selectedCard === wallet.id
-												? "text-blue-100"
-												: "text-gray-500"
-										}`}
-									>
-										{new Intl.NumberFormat("en-US", {
-											style: "currency",
-											currency: "USD",
-										}).format(wallet.balance)}
-									</p>
-								</div>
-							</button>
-						))}
 					</div>
-				</div>
-
-				<div className="w-2/3 bg-white p-6 overflow-y-auto">
-					<div className="flex items-center justify-between mb-6">
-						<h3 className="text-lg font-semibold text-gray-900">
-							{selectedCard === "all"
-								? "Select a Card"
-								: wallets.find((w) => w.id === selectedCard)?.name + " Metrics"}
-						</h3>
-					</div>
-					{selectedCard === "all" ? (
-						<div className="flex items-center justify-center h-64 text-gray-500">
-							Select a card to view its metrics
-						</div>
-					) : (
-						<div className="space-y-6">
-							{/* Future card-specific metrics section */}
-						</div>
-					)}
-				</div>
+				))}
 			</div>
 		</div>
 	);
