@@ -3,8 +3,10 @@ import { X } from "lucide-react";
 import toast from "react-hot-toast";
 import { registerUser, loginUser } from "../../ApiService";
 
-export default function AuthModal({ isOpen, onClose, onSuccess }) {
-	const [isLogin, setIsLogin] = useState(true);
+export default function AuthModal({ isOpen, onClose, onSuccess, showSignUpOnly }) {
+	const [isLogin, setIsLogin] = useState(() => {
+		return showSignUpOnly != null ? !showSignUpOnly : true;
+	});
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -18,10 +20,12 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
 		try {
 			if (isLogin && await loginUser(email, password)) {
 				toast.success("Welcome back!");
-				onSuccess(email); // Pass email to determine admin status
+				if (onSuccess != null)
+					onSuccess(email); // Pass email to determine admin status
 			} else if (!isLogin && await registerUser(email, password)) {
 				toast.success("Account created successfully!");
-				onSuccess(email);
+				if (onSuccess != null)
+					onSuccess(email);
 			} else {
 				throw new Error("Please enter valid credentials");
 			}
@@ -108,15 +112,17 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
 					</button>
 				</form>
 
-				<p className="mt-4 text-center text-sm text-gray-600">
-					{isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-					<button
-						onClick={() => setIsLogin(!isLogin)}
-						className="text-blue-600 font-semibold hover:text-blue-700"
-					>
-						{isLogin ? "Sign Up" : "Sign In"}
-					</button>
-				</p>
+				{!showSignUpOnly &&
+					<p className="mt-4 text-center text-sm text-gray-600">
+						{isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+						<button
+							onClick={() => setIsLogin(!isLogin)}
+							className="text-blue-600 font-semibold hover:text-blue-700"
+						>
+							{isLogin ? "Sign Up" : "Sign In"}
+						</button>
+					</p>
+				}
 			</div>
 		</div>
 	);
