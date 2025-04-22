@@ -44,6 +44,7 @@ def create_app():
 			db.session.rollback()
 			return jsonify({"error": "Email already exists"}), 409
 
+		session["user_id"] = new_user.id
 		return jsonify({"success": True, "email": email}), 201
 
 	@app.route("/api/login", methods=["POST"])

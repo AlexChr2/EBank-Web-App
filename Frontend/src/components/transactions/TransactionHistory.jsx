@@ -9,7 +9,7 @@ export default function TransactionHistory({ transactions, wallets }) {
 	const [maxAmount, setMaxAmount] = useState("");
 
 	const getWalletName = (id) =>
-		wallets.find((w) => w.id === id)?.name || "Unknown Card";
+		wallets.find((w) => w.id == id)?.name || "Unknown Card";
 
 	const icons = {
 		deposit: ArrowDownToLine,
