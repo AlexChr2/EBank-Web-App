@@ -7,7 +7,6 @@ import Sidebar from './components/layout/Sidebar';
 import AuthModal from './components/auth/AuthModal';
 import DashboardContent from './components/dashboard/DashboardContent';
 import AdminDashboard from './components/admin/AdminDashboard';
-import { ThemeProvider } from './contexts/ThemeContext';
 import { UserProvider } from './contexts/UserContext';
 import { logout } from './ApiService';
 
@@ -53,44 +52,42 @@ function App() {
 	};
 
 	return (
-		<ThemeProvider>
-			<UserProvider>
-				<div className="min-h-screen bg-white">
-					{!isLoggedIn ? (
-						<>
-							<Hero onAuthClick={() => setShowAuthModal(true)} />
-							<Testimonials />
-							<Contact />
-							<AuthModal
-								isOpen={showAuthModal}
-								onClose={() => setShowAuthModal(false)}
-								onSuccess={handleAuthSuccess}
-							/>
-						</>
-					) : (
-						<div className="flex h-screen overflow-hidden">
-							<Sidebar
-								isAdmin={isAdmin}
-								currentRoute={currentRoute}
-								onNavigate={handleNavigate}
-							/>
-							<main className="flex-1 relative">
-								<div className="absolute inset-0 overflow-y-auto">
-									<div className="p-8">
-										{currentRoute === 'admin' && isAdmin ? (
-											<AdminDashboard />
-										) : (
-											<DashboardContent />
-										)}
-									</div>
+		<UserProvider>
+			<div className="min-h-screen bg-white">
+				{!isLoggedIn ? (
+					<>
+						<Hero onAuthClick={() => setShowAuthModal(true)} />
+						<Testimonials />
+						<Contact />
+						<AuthModal
+							isOpen={showAuthModal}
+							onClose={() => setShowAuthModal(false)}
+							onSuccess={handleAuthSuccess}
+						/>
+					</>
+				) : (
+					<div className="flex h-screen overflow-hidden">
+						<Sidebar
+							isAdmin={isAdmin}
+							currentRoute={currentRoute}
+							onNavigate={handleNavigate}
+						/>
+						<main className="flex-1 relative">
+							<div className="absolute inset-0 overflow-y-auto">
+								<div className="p-8">
+									{currentRoute === 'admin' && isAdmin ? (
+										<AdminDashboard />
+									) : (
+										<DashboardContent />
+									)}
 								</div>
-							</main>
-						</div>
-					)}
-					<Toaster position="top-center" />
-				</div>
-			</UserProvider>
-		</ThemeProvider>
+							</div>
+						</main>
+					</div>
+				)}
+				<Toaster position="top-center" />
+			</div>
+		</UserProvider>
 	);
 }
 

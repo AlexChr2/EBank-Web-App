@@ -6,11 +6,9 @@ import TransactionList from "../transactions/TransactionList";
 import TransactionHistory from "../transactions/TransactionHistory";
 import StatisticsView from "../statistics/StatisticsView";
 import toast from "react-hot-toast";
-import { useTheme } from "../../contexts/ThemeContext";
 import { createECard, deleteCard, getCards, getTransactions, makeTransaction, renameCard } from "../../ApiService";
 
 export default function DashboardContent() {
-	const { theme } = useTheme();
 	const [wallets, setWallets] = useState([]);
 	const [transactions, setTransactions] = useState([]);
 	const [showTransactionForm, setShowTransactionForm] = useState(false);
@@ -166,9 +164,7 @@ export default function DashboardContent() {
 			{currentView === "dashboard" ? (
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 					<div
-						className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-16rem)] ${
-							theme === "dark" ? "bg-gray-800" : "bg-white"
-						}`}
+						className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-16rem)] bg-white`}
 					>
 						<WalletList
 							wallets={wallets}
@@ -180,21 +176,15 @@ export default function DashboardContent() {
 
 					<div
 						ref={transactionRef}
-						className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-16rem)] ${
-							theme === "dark" ? "bg-gray-800" : "bg-white"
-						}`}
+						className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-16rem)] bg-white`}
 					>
 						<div className="h-full flex flex-col">
 							<div
-								className={`p-6 border-b ${
-									theme === "dark" ? "border-gray-700" : "border-gray-200"
-								}`}
+								className={`p-6 border-b border-gray-200`}
 							>
 								<div className="flex justify-between items-center">
 									<h2
-										className={`text-xl font-semibold ${
-											theme === "dark" ? "text-white" : "text-gray-900"
-										}`}
+										className={`text-xl font-semibold text-white`}
 									>
 										Transactions
 									</h2>
@@ -209,11 +199,7 @@ export default function DashboardContent() {
 										) : (
 											<button
 												onClick={() => setShowTransactionForm(false)}
-												className={`px-4 py-2 rounded-lg ${
-													theme === "dark"
-														? "border border-gray-600 text-gray-300 hover:bg-gray-700"
-														: "border border-gray-300 text-gray-700 hover:bg-gray-50"
-												}`}
+												className={`px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50`}
 											>
 												Cancel
 											</button>
@@ -233,8 +219,6 @@ export default function DashboardContent() {
 													className={`px-4 py-2 rounded-lg capitalize whitespace-nowrap ${
 														transactionType === type
 															? "bg-blue-600 text-white"
-															: theme === "dark"
-															? "bg-gray-700 text-gray-300 hover:bg-gray-600"
 															: "bg-gray-100 text-gray-600 hover:bg-gray-200"
 													}`}
 												>
@@ -262,17 +246,13 @@ export default function DashboardContent() {
 				</div>
 			) : currentView === "history" ? (
 				<div
-					className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-16rem)] ${
-						theme === "dark" ? "bg-gray-800" : "bg-white"
-					}`}
+					className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-16rem)] bg-white`}
 				>
 					<TransactionHistory transactions={transactions} wallets={wallets} />
 				</div>
 			) : (
 				<div
-					className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-16rem)] ${
-						theme === "dark" ? "bg-gray-800" : "bg-white"
-					}`}
+					className={`rounded-xl shadow-sm overflow-hidden h-[calc(100vh-16rem)] bg-white`}
 				>
 					<StatisticsView transactions={transactions} wallets={wallets} />
 				</div>
