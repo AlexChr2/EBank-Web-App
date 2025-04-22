@@ -11,6 +11,7 @@ import {
 	UserX,
 } from "lucide-react";
 import UserManagement from "../admin/UserManagement";
+import AuthModal from "../auth/AuthModal";
 
 export default function Sidebar({ isAdmin, onNavigate, currentRoute }) {
 	const [showUserManagement, setShowUserManagement] = useState(false);
@@ -161,10 +162,18 @@ export default function Sidebar({ isAdmin, onNavigate, currentRoute }) {
 				</div>
 			</div>
 
-			{showUserManagement && (
-				<UserManagement
-					action={userManagementAction}
+			{showUserManagement && userManagementAction === "create" && (
+				<AuthModal
+					isOpen={showUserManagement}
 					onClose={() => setShowUserManagement(false)}
+					showSignUpOnly={true}
+				/>
+			)}
+
+			{showUserManagement && userManagementAction !== "create" && (
+				<UserManagement
+					action={"delete"}
+					onClose={() => {setShowUserManagement(false)}}
 				/>
 			)}
 		</>
