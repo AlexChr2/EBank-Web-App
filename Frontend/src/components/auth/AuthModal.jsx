@@ -108,7 +108,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, showSignUpOnly }
 						disabled={loading}
 						className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
 					>
-						{loading ? "Processing..." : isLogin ? "Sign In" : "Sign Up"}
+						{loading ? "Processing..." : isLogin ? "Sign In" : (showSignUpOnly ? "Create User" :"Sign Up")}
 					</button>
 				</form>
 
