@@ -18,14 +18,20 @@ export default function AuthModal({ isOpen, onClose, onSuccess, showSignUpOnly }
 		setLoading(true);
 
 		try {
-			if (isLogin && await loginUser(email, password)) {
+			let userid = null;
+			if (isLogin) {
+				const returnval = await loginUser(email, password);
+				userid = returnval.id;
 				toast.success("Welcome back!");
 				if (onSuccess != null)
-					onSuccess(email); // Pass email to determine admin status
-			} else if (!isLogin && await registerUser(email, password)) {
+					onSuccess(email, userid); // Pass email to determine admin status
+			} else if (!isLogin) {
+				const returnval = await registerUser(email, password);
+				userid = returnval.id;
+				console.error(userid);
 				toast.success("Account created successfully!");
 				if (onSuccess != null)
-					onSuccess(email);
+					onSuccess(email, userid);
 			} else {
 				throw new Error("Please enter valid credentials");
 			}
