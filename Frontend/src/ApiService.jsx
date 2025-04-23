@@ -37,6 +37,10 @@ export const getTransactions = async() => {
 	return await sendToBackend("/api/get-transactions", "GET");
 }
 
+export const getUsers = async() => {
+	return await sendToBackend("/api/get-users", "GET");
+}
+
 export const makeTransaction = async(type, srcCardId, resCardId, amt, desc) => {
 	const transaction = {
 		type: type,

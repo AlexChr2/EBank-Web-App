@@ -1,30 +1,44 @@
-import React, { createContext, useContext, useState } from "react";
-
-// Initial dummy users
-const initialUsers = [
-	{ id: "1", name: "John Doe", email: "john@example.com", role: "user" },
-	{ id: "2", name: "Jane Smith", email: "jane@example.com", role: "user" },
-	{ id: "3", name: "Admin User", email: "admin@admin.com", role: "admin" },
-	{ id: "4", name: "Sarah Wilson", email: "sarah@example.com", role: "user" },
-	{ id: "5", name: "Mike Johnson", email: "mike@example.com", role: "user" },
-];
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { getUsers, deleteUser as backendDeleteUser } from "../ApiService";
+import toast from "react-hot-toast";
 
 // Create context without types
 const UserContext = createContext(undefined);
 
 export function UserProvider({ children }) {
-	const [users, setUsers] = useState(initialUsers);
+	const [users, setUsers] = useState([]);
+	const [loading, setLoading] = useState(true);
+
+	// load the users from the backend
+	useEffect(() => {
+		getUsers()
+			.then((user_input) => {
+				const updatedUsers = user_input.map((user) => ({
+					...user,
+					role: user.email.endsWith("@admin.com") ? "admin" : "user",
+				}));
+				setUsers(updatedUsers);
+			})
+			.catch((error) => toast.error(error))
+			.finally(() => setLoading(false));
+	}, []);
 
 	const addUser = (user) => {
 		setUsers((prevUsers) => [...prevUsers, user]);
 	};
 
 	const deleteUser = (id) => {
-		setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+		backendDeleteUser(id)
+			.then(() => toast.success("User deleted successfully!"))
+			.catch((error) => {
+				toast.error(error);
+				return;
+			});
+		setUsers((prevUsers) => prevUsers.filter((user) => user.id != id));
 	};
 
 	return (
-		<UserContext.Provider value={{ users, addUser, deleteUser }}>
+		<UserContext.Provider value={{ users, addUser, deleteUser, loading }}>
 			{children}
 		</UserContext.Provider>
 	);

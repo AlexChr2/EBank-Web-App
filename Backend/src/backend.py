@@ -260,7 +260,7 @@ def create_app():
 			'createdAt': t.timestamp
 		} for t in transactions])
 
-	@app.route("/api/users", methods=["GET"])
+	@app.route("/api/get-users", methods=["GET"])
 	def get_users():
 		users = db.session.query(User)
 		return jsonify([{'id': u.id, 'email': u.email} for u in users])

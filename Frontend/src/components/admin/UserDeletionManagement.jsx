@@ -5,15 +5,18 @@ import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useUsers } from "../../contexts/UserContext";
 
 export default function UserDeletionManagement({ onClose, action }) {
-	const { users, addUser, deleteUser } = useUsers();
+	const { users, addUser, deleteUser, loading } = useUsers();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [newUser, setNewUser] = useState({ name: "", email: "", role: "user" });
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [showConfirmation, setShowConfirmation] = useState(false);
 
+	if (loading) {
+		return <div>Loading users...</div>;
+	}
+
 	const filteredUsers = users.filter(
 		(user) =>
-			user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
 			user.email.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
