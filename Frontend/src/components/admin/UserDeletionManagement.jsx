@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useUsers } from "../../contexts/UserContext";
 
-export default function UserManagement({ onClose, action }) {
+export default function UserDeletionManagement({ onClose, action }) {
 	const { users, addUser, deleteUser } = useUsers();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [newUser, setNewUser] = useState({ name: "", email: "", role: "user" });

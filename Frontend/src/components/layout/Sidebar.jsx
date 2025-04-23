@@ -10,7 +10,7 @@ import {
 	UserPlus,
 	UserX,
 } from "lucide-react";
-import UserManagement from "../admin/UserManagement";
+import UserDeletionManagement from "../admin/UserDeletionManagement";
 import AuthModal from "../auth/AuthModal";
 
 export default function Sidebar({ isAdmin, onNavigate, currentRoute }) {
@@ -171,7 +171,7 @@ export default function Sidebar({ isAdmin, onNavigate, currentRoute }) {
 			)}
 
 			{showUserManagement && userManagementAction !== "create" && (
-				<UserManagement
+				<UserDeletionManagement
 					action={"delete"}
 					onClose={() => {setShowUserManagement(false)}}
 				/>
