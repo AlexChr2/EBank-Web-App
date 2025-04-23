@@ -41,6 +41,11 @@ export const getUsers = async() => {
 	return await sendToBackend("/api/get-users", "GET");
 }
 
+export const deleteUser = async(user_id) => {
+	const user = { user_id : user_id };
+	return await sendToBackend("/api/delete-user", "DELETE", user);
+}
+
 export const makeTransaction = async(type, srcCardId, resCardId, amt, desc) => {
 	const transaction = {
 		type: type,

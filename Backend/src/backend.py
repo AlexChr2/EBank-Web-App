@@ -265,6 +265,44 @@ def create_app():
 		users = db.session.query(User)
 		return jsonify([{'id': u.id, 'email': u.email} for u in users])
 
+	@app.route("/api/delete-user", methods=["DELETE"])
+	@login_required
+	def delete_user():
+		data = request.json
+		if not data or data.get("user_id") is None:
+			return jsonify({"error": "Missing fields"}), 401
+
+		user_id = int(data.get("user_id"))
+
+		def delete_user_info(model_class, filter_field, filter_value):
+			from sqlalchemy import delete
+			stmt = delete(model_class).where(filter_field == filter_value)
+			try:
+				db.session.execute(stmt)
+				db.session.commit()
+			except DatabaseError:
+				db.session.rollback()
+				return jsonify({"error": "Unknown database error"}), 401
+
+		# when deleting a user, we also have to delete all his transactions & ecards
+		delete_user_info(Transaction, Transaction.user_id, user_id)
+		delete_user_info(ECard, ECard.user_id, user_id)
+
+		from sqlalchemy import select
+		stmt = select(User).where(User.id == user_id)
+		user = db.session.execute(stmt).scalars().first()
+
+		if user:
+			db.session.delete(user)
+			try:
+				db.session.commit()
+			except DatabaseError:
+				db.session.rollback()
+				return jsonify({"error": "Unknown database error"}), 401
+		else:
+			return jsonify({"error": "Failed to find user"}), 401
+		return jsonify({"success": True}), 201
+
 	return app
 
 if __name__ == "__main__":
