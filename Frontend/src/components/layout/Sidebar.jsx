@@ -179,7 +179,6 @@ export default function Sidebar({ isAdmin, onNavigate, currentRoute }) {
 
 			{showUserManagement && userManagementAction !== "create" && (
 				<UserDeletionManagement
-					action={"delete"}
 					onClose={() => {setShowUserManagement(false)}}
 				/>
 			)}
