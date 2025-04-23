@@ -12,8 +12,10 @@ import {
 } from "lucide-react";
 import UserDeletionManagement from "../admin/UserDeletionManagement";
 import AuthModal from "../auth/AuthModal";
+import { useUsers } from "../../contexts/UserContext";
 
 export default function Sidebar({ isAdmin, onNavigate, currentRoute }) {
+	const { addUser, deleteUser } = useUsers();
 	const [showUserManagement, setShowUserManagement] = useState(false);
 	const [userManagementAction, setUserManagementAction] = useState("create");
 
@@ -72,6 +74,10 @@ export default function Sidebar({ isAdmin, onNavigate, currentRoute }) {
 			setShowUserManagement(true);
 		}
 		onNavigate(item.route);
+	};
+
+	const onAuthSuccess = (email, id) => {
+		addUser({"id": id, "email": email, "role": email.endsWith('@admin.com') ? "admin" : "user"});
 	};
 
 	return (
@@ -166,6 +172,7 @@ export default function Sidebar({ isAdmin, onNavigate, currentRoute }) {
 				<AuthModal
 					isOpen={showUserManagement}
 					onClose={() => setShowUserManagement(false)}
+					onSuccess={onAuthSuccess}
 					showSignUpOnly={true}
 				/>
 			)}
