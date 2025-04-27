@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
 import { registerUser, loginUser } from "../../ApiService";
+import { useUsers } from "../../contexts/UserContext";
 
 export default function AuthModal({ isOpen, onClose, onSuccess, showSignUpOnly }) {
+	const { addUser } = useUsers();
 	const [isLogin, setIsLogin] = useState(() => {
 		return showSignUpOnly != null ? !showSignUpOnly : true;
 	});
@@ -28,7 +30,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, showSignUpOnly }
 			} else if (!isLogin) {
 				const returnval = await registerUser(email, password);
 				userid = returnval.id;
-				console.error(userid);
+				addUser({'id': returnval.id, 'email': email, 'role': email.endsWith('@admin.com') ? 'admin' : 'user'});
 				toast.success("Account created successfully!");
 				if (onSuccess != null)
 					onSuccess(email, userid);
