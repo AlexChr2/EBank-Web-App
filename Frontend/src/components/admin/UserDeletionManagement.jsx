@@ -5,9 +5,8 @@ import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useUsers } from "../../contexts/UserContext";
 
 export default function UserDeletionManagement({ onClose }) {
-	const { users, addUser, deleteUser, loading } = useUsers();
+	const { users, deleteUser, loading } = useUsers();
 	const [searchTerm, setSearchTerm] = useState("");
-	const [newUser, setNewUser] = useState({ name: "", email: "", role: "user" });
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -19,29 +18,6 @@ export default function UserDeletionManagement({ onClose }) {
 		(user) =>
 			user.email.toLowerCase().includes(searchTerm.toLowerCase())
 	);
-
-	const handleCreateUser = (e) => {
-		e.preventDefault();
-		if (!newUser.name.trim() || !newUser.email.trim()) {
-			toast.error("Please fill in all required fields");
-			return;
-		}
-
-		const emailExists = users.some((user) => user.email === newUser.email);
-		if (emailExists) {
-			toast.error("A user with this email already exists");
-			return;
-		}
-
-		const user = {
-			id: String(Date.now()),
-			...newUser,
-		};
-
-		addUser(user);
-		toast.success("User created successfully!");
-		onClose();
-	};
 
 	const handleDeleteUser = () => {
 		if (selectedUser) {

@@ -15,7 +15,7 @@ import AuthModal from "../auth/AuthModal";
 import { useUsers } from "../../contexts/UserContext";
 
 export default function Sidebar({ isAdmin, onNavigate, currentRoute }) {
-	const { addUser, deleteUser } = useUsers();
+	const { addUser } = useUsers();
 	const [showUserManagement, setShowUserManagement] = useState(false);
 	const [userManagementAction, setUserManagementAction] = useState("create");
 
