@@ -22,6 +22,7 @@ import {
 	Title,
 	Tooltip,
 	Legend,
+	plugins,
 } from "chart.js";
 import { Line, Bar, Pie, Doughnut } from "react-chartjs-2";
 
@@ -291,7 +292,10 @@ export default function StatisticsView({ transactions, wallets }) {
 			},
 			chartOptions: {
 				maintainAspectRatio: false,
-				plugins: { legend: { display: false } },
+				plugins: {
+					legend: { display: false },
+					horizontalLine: { y: 1000 },
+				},
 				scales: {
 					y: {
 						beginAtZero: true,
@@ -333,7 +337,10 @@ export default function StatisticsView({ transactions, wallets }) {
 			},
 			chartOptions: {
 				maintainAspectRatio: false,
-				plugins: { legend: { display: false } },
+				plugins: {
+					legend: { display: false },
+					horizontalLine: { y: 2 }
+				},
 				scales: {
 					y: {
 						beginAtZero: true,
@@ -387,7 +394,29 @@ export default function StatisticsView({ transactions, wallets }) {
 									</div>
 									<div className="h-48 flex-grow">
 										{stat.chartType === "line" && (
-											<Line data={stat.chartData} options={stat.chartOptions} />
+											<Line data={stat.chartData} options={stat.chartOptions} plugins={[
+												{
+													id: 'horizontalLine',
+													afterDraw: (chart) => {
+														const { ctx, chartArea: { left, right }, scales: { y }, options } = chart;
+
+														// Read from options.plugins.horizontalLine
+														const lineOpts = options.plugins?.horizontalLine;
+														if (!lineOpts || typeof lineOpts.y !== 'number')
+															return; // Safety check
+
+														ctx.save();
+														ctx.beginPath();
+														ctx.moveTo(left, y.getPixelForValue(lineOpts.y));
+														ctx.lineTo(right, y.getPixelForValue(lineOpts.y));
+														ctx.lineWidth = 2;
+														ctx.strokeStyle = 'oklch(58.6% 0.253 17.585)';
+														ctx.setLineDash([5, 5]);
+														ctx.stroke();
+														ctx.restore();
+													},
+												},
+											]} />
 										)}
 										{stat.chartType === "bar" && (
 											<Bar data={stat.chartData} options={stat.chartOptions} />
