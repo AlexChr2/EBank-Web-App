@@ -124,7 +124,11 @@ export default function AuthModal({ isOpen, onClose, onSuccess, showSignUpOnly }
 					<p className="mt-4 text-center text-sm text-gray-600">
 						{isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
 						<button
-							onClick={() => setIsLogin(!isLogin)}
+							onClick={() => {
+								setIsLogin(!isLogin);
+								setEmail('');
+								setPassword('');
+							}}
 							className="text-blue-600 font-semibold hover:text-blue-700"
 						>
 							{isLogin ? "Sign Up" : "Sign In"}
