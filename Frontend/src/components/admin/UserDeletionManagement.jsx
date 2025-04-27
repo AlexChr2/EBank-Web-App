@@ -29,7 +29,6 @@ export default function UserDeletionManagement({ onClose }) {
 
 			deleteUser(selectedUser);
 			setShowConfirmation(false);
-			toast.success("User deleted successfully!");
 			onClose();
 		}
 	};
