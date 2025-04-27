@@ -16,7 +16,7 @@ const testimonials = [
 		image:
 			"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150",
 		content:
-			"The multi-currency support and low transfer fees have made international client payments a breeze.",
+			"The ease-of-use of this app have made international client payments a breeze!",
 	},
 	{
 		name: "Emily Rodriguez",
