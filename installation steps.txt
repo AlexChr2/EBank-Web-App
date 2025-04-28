@@ -1,0 +1,9 @@
+Για το Backend:
+Εγκατάσταση βιβλιοθηκών Flask, Flask-CORS, Flask-SQLAlchemy:
+
+pip install Flask
+pip install Flask-CORS
+pip install -U Flask-SQLAlchemy
+
+Για το Frontend:
+Εγκατάσταση Node.js, και μετά εκτέλεση της εντολής npm install μέσα στον φάκελο Frontend
